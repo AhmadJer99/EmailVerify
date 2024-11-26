@@ -28,10 +28,42 @@ internal class UserInterface
 
     private void ProcessUserEntry()
     {
+        // the proces steps , first check if the syntax is correct or not ,
+        // secondly check if the email likliness of the email being valid or not using the confidence sscore levels 
+        // finally check the Mx Check and detemine if the email can recieve email or not.
         ValidateEmailAddress validateEmailAddress = new(_emailAddress);
-        validateEmailAddress.CheckEmailPossibleTypoFix();
-
         ShowStatusLogo();
+        validateEmailAddress.CheckEmailPossibleTypoFix();
+        if (!validateEmailAddress.IsEmailAddressFormatValid())
+        {
+            AnsiConsole.MarkupLine("[bold red]The format you entered is invalid! Please try again.[/]");
+            return;
+        }
+        var confidenceScore = validateEmailAddress.GetEmailAddressValidConfidenceScore();
+        if (confidenceScore < 0.6)
+        {
+            AnsiConsole.MarkupLine("[bold red]The email you provided is likely invalid[/]");
+           
+        }
+        else if (confidenceScore >= 0.6 & confidenceScore <= 0.8)
+        {
+            AnsiConsole.MarkupLine("[bold yellow]The email you provided is potentially valid[/]");
+            
+        }
+        else if (confidenceScore > 0.8)
+        {
+            AnsiConsole.MarkupLine("[bold green]The email you provided is likely valid[/]");
+            
+        }
+        if (!validateEmailAddress.EmailCanRecieveMail())
+        {
+            AnsiConsole.MarkupLine("[bold red]The email you provided is un capable of recieving emails[/]");
+            
+        }
+        else
+        {
+            AnsiConsole.MarkupLine("[bold green]The email you provided is un capable of recieving emails[/]");
+        }
     }
 
     private void ShowStatusLogo()

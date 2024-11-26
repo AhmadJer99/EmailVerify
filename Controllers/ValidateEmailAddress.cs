@@ -38,7 +38,7 @@ internal class ValidateEmailAddress
 
                 if (userChoice.ToLower() == "y")
                 {
-                    _emailAddress = _emailDetails.CorrectedEmail;
+                    _emailAddress = "&email=" + _emailDetails.CorrectedEmail;
                     var task = LoadPhoneDetails();
                     task.Wait();
                     return;
